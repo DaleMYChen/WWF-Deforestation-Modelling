@@ -1,0 +1,256 @@
+{
+    "wcf_products": [
+      {
+        "filename": "WCF2022_region1.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 1,
+        "size": 0.0765,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=13EV-gswl0B6OqMnarMMexnryCKxg6IOq"
+      },
+      {
+        "filename": "WCF2022_region2.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 2,
+        "size": 1.3,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1nMOmWJqgBIGec0yDvUm5Rr8blfd3aTiq"
+      },
+      {
+        "filename": "WCF2022_region3.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 3,
+        "size": 1.1,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1p7By5CGh7_3foipf6YbZFUNS_-jf5QtV"
+      },
+      {
+        "filename": "WCF2022_region4.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 4,
+        "size": 0.703,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1Lvs3-jScsDCEo5QK-L11Eb59de034_0u"
+      },
+      {
+        "filename": "WCF2022_region5.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 5,
+        "size": 0.806,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1-t6W8_5a83Vt6Ve63g1E4ApdiyaiW6tU"
+      },
+      {
+        "filename": "WCF2022_region6.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 6,
+        "size": 0.873,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=19bKmyGjS4ESr46nKixemsTaP_LriAp2v"
+      },
+      {
+        "filename": "WCF2022_region7.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 7,
+        "size": 0.778,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1aKzosfaKwyLsyJ92Yu8ph8DuCAW0UX-8"
+      },
+      {
+        "filename": "WCF2022_region8.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 8,
+        "size": 1.9,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1Nk42gGFQNFsVCPjUnwJxU9yKZT14GhPU"
+      },
+      {
+        "filename": "WCF2022_region9.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 9,
+        "size": 1.2,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1wjSdD6UWN-kCOXGBGXShM6I7JzRkRwuz"
+      },
+      {
+        "filename": "WCF2022_region10.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 10,
+        "size": 0.720,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1WxmQVmlIovBDYMXNeW1Aqtzn2cPL93ZY"
+      },
+      {
+        "filename": "WCF2022_region11.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 11,
+        "size": 1.1,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1ylK5Ic4OLkm3KWUxoqZcLJSTycAnJ6R8"
+      },
+      {
+        "filename": "WCF2022_region12.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 12,
+        "size": 2.5,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1qOLMhIYlkuZK49-AOdYfR8jQ36m4K_zB"
+      },
+      {
+        "filename": "WCF2022_region13.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 13,
+        "size": 0.397,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1sMAZ4Ko8KyN3AE2L4M0g5eDMcLmJb4ho"
+      },
+      {
+        "filename": "WCF2022_region14.tif",
+        "product": "WCF",
+        "year": 2022,
+        "region": 14,
+        "size": 0.774,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1-W_hTGyY5eHQNoOzEyktOfDNAXhK-PIT"
+      },
+      {
+        "filename": "WCF2023_region1.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 1,
+        "size": 0.0881,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=1LeIflgmVqM0HKZA_F1_MlDD2UpH9Z5IC"
+      },
+      {
+        "filename": "WCF2023_region2.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 2,
+        "size": 1.5,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/uc?export=download&id=186q7G5pjfnwOfMnJAeiJrr3sXm9E0jI9"
+      },
+      {
+        "filename": "WCF2023_region3.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 3,
+        "size": 1.3,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/file/d/10IfkuWgbZm6m8j6IpqpTcwTyHr-Gq-y-/view?usp=drive_link"
+      },
+      {
+        "filename": "WCF2023_region4.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 4,
+        "size": 0.714,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/file/d/1pjLZ9yk_AtWH-I0CV4y1rtiVXczLUStW/view?usp=drive_link"
+      },
+      {
+        "filename": "WCF2023_region5.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 5,
+        "size": 0.761,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/file/d/1anpdW3uT2J-p9IERXOw5DmgPLQcZMNo7/view?usp=drive_link"
+      },
+      {
+        "filename": "WCF2023_region6.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 6,
+        "size": 0.963,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/file/d/1F3dEUl7Uw0WLVVFLxSMxf9AUjgI9lxe_/view?usp=drive_link"
+      },
+      {
+        "filename": "WCF2023_region7.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 7,
+        "size": 1.1,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/file/d/1PecRVh9bD1TnREbiRjTTqEYlKjORy0Mp/view?usp=drive_link"
+      },
+      {
+        "filename": "WCF2023_region8.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 8,
+        "size": 2.0,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/file/d/1z1U4Kf5NYpaKGUd9buKPSnkJH-xhyrpv/view?usp=drive_link"
+      },
+      {
+        "filename": "WCF2023_region9.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 9,
+        "size": 1.1,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/file/d/1O5H1KYXO5RME25LGGFqS1GkLgqGpYM6A/view?usp=drive_link"
+      },
+      {
+        "filename": "WCF2023_region10.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 10,
+        "size": 0.655,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/file/d/1CwWy8hG26Uhy9JNPz7MdJ9gR8V5dDWMx/view?usp=drive_link"
+      },
+      {
+        "filename": "WCF2023_region11.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 11,
+        "size": 0.922,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/file/d/1QFDL1xkAUcxeogW54vUzliStclRdKUia/view?usp=drive_link"
+      },
+      {
+        "filename": "WCF2023_region12.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 12,
+        "size": 2.2,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/file/d/1U1mX5QJ7qVoMPulzJeKAiAXg_ONxgcX6/view?usp=drive_link"
+      },
+      {
+        "filename": "WCF2023_region13.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 13,
+        "size": 0.376,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/file/d/1-76Qa-Dd0tvlFXHFaRAxdbswOKzvB4fY/view?usp=drive_link"
+      },
+      {
+        "filename": "WCF2023_region14.tif",
+        "product": "WCF",
+        "year": 2023,
+        "region": 14,
+        "size": 0.754,
+        "format": "geotiff",
+        "download_link": "https://drive.google.com/file/d/1gLJjkybbQLPNHooKc3TII94HEaByj6o6/view?usp=drive_link"
+      }
+    ]
+  }

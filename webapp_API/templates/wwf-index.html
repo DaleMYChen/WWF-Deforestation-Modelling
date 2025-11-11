@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Queensland Land Parcels</title>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.vectorgrid@latest/dist/Leaflet.VectorGrid.bundled.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ol@v9.0.0/dist/ol.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/ol@v9.0.0/ol.css"
+    />
+    <script src="https://unpkg.com/ol-pmtiles@1.0.2/dist/olpmtiles.js"></script>
+  </head>
+  <body class="h-screen flex flex-col">
+    <!-- Navigation Bar -->
+    <nav class="bg-white border-b border-gray-200 px-4 py-2.5">
+      <div class="flex justify-between items-center">
+        <h1 class="text-xl font-semibold">
+          Deforestation Self-Assessment Tool
+        </h1>
+        <div class="space-x-4">
+          <a href="#" class="text-gray-700 hover:text-gray-900">Home</a>
+          <a href="/self_assessment" class="text-gray-700 hover:text-gray-900">Assessment</a>
+          <a href="#" class="text-gray-700 hover:text-gray-900">About</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="flex flex-1 overflow-hidden">
+      <!-- Left Sidebar -->
+      <div class="w-70 border-r border-gray-200 flex flex-col bg-white z-10">
+        <!-- Search Box -->
+        <div class="p-4 border-b border-gray-200">
+          <div class="mb-2">Search for Lot/Parcel ID</div>
+          <div class="flex gap-2">
+            <input
+              type="text"
+              id="lot-input"
+              class="flex-1 border border-gray-300 rounded px-3 py-2"
+              placeholder="Enter ID"
+            />
+            <button
+              class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition flex-shrink-0"
+              onclick="findAndSelectFeature()"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+
+        <!-- Selected Lots List -->
+        <div class="flex-1 overflow-y-auto">
+          <div class="p-4">
+            <!-- Selected Lots Header with Dialog -->
+            <div class="flex justify-between items-center mb-4">
+              <div class="font-medium">Selected lots</div>
+              <!-- Dialog Trigger Button -->
+              <button
+                onclick="document.getElementById('dialog-delete-all').showModal()"
+                class="text-red-600 text-sm hover:text-red-700"
+              >
+                Delete all
+              </button>
+
+              <!-- Confirmation Dialog -->
+              <dialog
+                id="dialog-delete-all"
+                class="rounded-lg shadow-lg p-0 backdrop:bg-gray-500/50"
+              >
+                <div class="p-4 min-w-[300px]">
+                  <h3 class="text-lg font-semibold mb-2">Confirm Delete All</h3>
+                  <p class="text-gray-600 mb-4">
+                    Are you sure you want to delete all selected lots?
+                  </p>
+
+                  <div class="flex justify-end gap-2">
+                    <button
+                      onclick="document.getElementById('dialog-delete-all').close()"
+                      class="px-3 py-1.5 border border-gray-300 rounded-md hover:bg-gray-100"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      hx-post="/delete-all"
+                      hx-target="#lot-list"
+                      hx-swap="innerHTML"
+                      onclick="document.getElementById('dialog-delete-all').close()"
+                      class="px-3 py-1.5 bg-red-500 text-white rounded-md hover:bg-red-600"
+                    >
+                      Delete All
+                    </button>
+                  </div>
+                </div>
+              </dialog>
+            </div>
+
+            <div id="lot-list"></div>
+          </div>
+        </div>
+
+        <div class="p-4 border-t border-gray-200">
+          <button
+            id="report-button"
+            class="w-full bg-green-600 text-white py-3 rounded hover:bg-green-700 flex items-center justify-center gap-2 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            hx-post="/report"
+            hx-history="true"
+            hx-swap="innerHTML"
+            hx-target="#report-content"
+            hx-include="#lot-list"
+            hx-on::before-request="this.disabled = true; this.classList.add('cursor-not-allowed', 'opacity-50')"
+            hx-on::after-request="this.disabled = false; this.classList.remove('cursor-not-allowed', 'opacity-50'); document.getElementById('report-overlay').classList.remove('hidden')"
+            hx-vals='{"dataset": "aus"}'
+          >
+            <div class="htmx-indicator hidden">
+              <svg class="animate-spin h-5 w-5" viewBox="0 0 24 24">
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                  fill="none"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            </div>
+            <span>Get Report</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Map Container -->
+      <div
+        id="map"
+        class="flex-1 relative h-full"
+        style="height: calc(100vh - 60px)"
+      >
+        <div class="absolute bottom-4 left-4 z-10">
+          <div class="relative">
+            <!-- Layer Control Panel Content -->
+            <div
+              id="layer-control"
+              class="hidden absolute bottom-full mb-2 bg-white rounded-lg shadow-lg w-80"
+            >
+              <div class="p-4 space-y-4">
+                <!-- Base layers -->
+                <div class="space-y-2">
+                  <label class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium text-gray-900"
+                        >Base Map</span
+                      >
+                      <button class="text-gray-400 hover:text-gray-600">
+                        <svg
+                          class="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked
+                      onchange="toggleLayer('osm')"
+                      class="h-4 w-4 rounded border-gray-300 accent-green-700 cursor-pointer"
+                    />
+                  </label>
+                  <label class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium text-gray-900"
+                        >Satellite</span
+                      >
+                      <button class="text-gray-400 hover:text-gray-600">
+                        <svg
+                          class="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <input
+                      type="checkbox"
+                      onchange="toggleLayer('satellite')"
+                      class="h-4 w-4 rounded border-gray-300 accent-green-700 cursor-pointer"
+                    />
+                  </label>
+                  <label class="flex items-center justify-between">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm font-medium text-gray-900"
+                        >Land Parcels</span
+                      >
+                      <button class="text-gray-400 hover:text-gray-600">
+                        <svg
+                          class="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                    <input
+                      type="checkbox"
+                      checked
+                      onchange="toggleLayer('vector')"
+                      class="h-4 w-4 rounded border-gray-300 accent-green-700 cursor-pointer"
+                    />
+                  </label>
+                </div>
+
+                <!-- Forest Definition -->
+                <div class="border-t border-gray-200 pt-3">
+                  <div class="flex items-center justify-between">
+                    <div class="flex-1">
+                      <div class="flex items-center space-x-2">
+                        <span class="text-sm font-medium text-gray-900"
+                          >Forest Definition</span
+                        >
+                        <button class="text-gray-400 hover:text-gray-600">
+                          <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                      <p class="text-sm text-gray-500 mt-1">
+                        Australian / FAO forest definitions
+                      </p>
+                    </div>
+                    <div class="flex items-center ml-4">
+                      <div
+                        class="inline-flex items-center rounded-lg border border-gray-200"
+                      >
+                        <button
+                          id="fao-button"
+                          onclick="toggleForestDefinition('fao')"
+                          class="relative inline-flex items-center px-2 py-1 text-xs rounded-l-lg bg-gray-200 text-gray-700 hover:bg-gray-300 focus:z-10 focus:outline-none"
+                        >
+                          fao
+                        </button>
+                        <button
+                          id="aus-button"
+                          onclick="toggleForestDefinition('aus')"
+                          class="relative -ml-px inline-flex items-center px-2 py-1 text-xs rounded-r-lg bg-emerald-600 text-white hover:bg-emerald-700 focus:z-10 focus:outline-none active:bg-emerald-800"
+                        >
+                          aus
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="border-t border-gray-200 pt-3">
+                  <div class="space-y-2">
+                    <!-- Forest -->
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-medium text-gray-700"
+                        >Forest</span
+                      >
+                      <div class="w-5 h-5 bg-[#0B6623] rounded"></div>
+                    </div>
+
+                    <!-- Deforestation 2021 -->
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-medium text-gray-700"
+                        >Forest loss - 2021</span
+                      >
+                      <div class="w-5 h-5 bg-[#F97952] rounded"></div>
+                    </div>
+
+                    <!-- 2022 -->
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-medium text-gray-700"
+                        >Forest loss - 2022</span
+                      >
+                      <div class="w-5 h-5 bg-[#C0285E] rounded"></div>
+                    </div>
+
+                    <!-- 2023 -->
+                    <div class="flex items-center justify-between">
+                      <span class="text-sm font-medium text-gray-700"
+                        >Forest loss - 2023</span
+                      >
+                      <div class="w-5 h-5 bg-[#680F6F] rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dropdown Button -->
+            <button
+              onclick="toggleLayerControl(event)"
+              class="bg-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-50 flex items-center justify-between w-80 group"
+            >
+              <div class="flex items-center gap-2">
+                <!-- Layer icon -->
+                <svg
+                  class="w-5 h-5 text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 4c1.657 0 3 1.343 3 3s-1.343 3-3 3-3-1.343-3-3 1.343-3 3-3z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+                <span class="text-sm font-medium text-gray-700"
+                  >Data layers</span
+                >
+              </div>
+              <!-- Chevron icon -->
+              <svg
+                class="w-4 h-4 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Add layer control functionality
+
+      document.addEventListener("click", function (event) {
+        const layerControl = document.getElementById("layer-control");
+        const layerButton = event.target.closest("button");
+        const panel = event.target.closest("#layer-control");
+
+        // If clicked outside both the button and panel, and panel is visible
+        if (
+          !layerButton &&
+          !panel &&
+          !layerControl.classList.contains("hidden")
+        ) {
+          layerControl.classList.add("hidden");
+        }
+      });
+
+      let hoveredFeature = null;
+      let clickedFeatures = new Set();
+      let lotIdToFeature = new Map();
+      let clickedFeaturesID = new Set();
+
+      function findAndSelectFeature() {
+        const lotPlanInput = document.getElementById("lot-input").value;
+
+        // Function to check if a feature matches our lot/plan
+        function findFeatureInSource(source) {
+          let foundFeature = null;
+
+          vectorLayer.getSource().forEachFeature(function (feature) {
+            const properties = feature.getProperties();
+            // Assuming the property in the vector layer that matches lot/plan format
+            const featureLotPlan = (
+              properties.lot_plan ||
+              properties.LOT_PLAN ||
+              ""
+            ).toString();
+
+            if (featureLotPlan.toLowerCase() === lotPlanInput.toLowerCase()) {
+              foundFeature = feature;
+              return true; // Break the loop
+            }
+          });
+
+          return foundFeature;
+        }
+
+        // Find the feature
+        const feature = findFeatureInSource(vectorLayer.getSource());
+
+        if (feature) {
+          // Add to clicked features set
+          clickedFeatures.add(feature);
+          clickedFeaturesID.add(feature.getProperties().OBJECTID);
+
+          // Get the feature properties for the HTMX request
+          const properties = feature.getProperties();
+
+          // Create GeoJSON representation of the feature
+          const inflatedCoordinates =
+            ol.geom.flat.inflate.inflateCoordinatesArray(
+              feature.getFlatCoordinates(),
+              0,
+              feature.getEnds(),
+              2
+            );
+
+          const poly = new ol.geom.Polygon(inflatedCoordinates);
+          poly.transform("EPSG:3857", "EPSG:4326");
+
+          const featUnproj = {
+            type: "Feature",
+            properties: properties,
+            geometry: {
+              type: feature.getGeometry().getType(),
+              coordinates: poly.getCoordinates(),
+            },
+          };
+
+          // Store in the mapping
+          if (properties.lot_id) {
+            lotIdToFeature.set(properties.lot_id.toString(), feature);
+          }
+
+          // Make HTMX request to add to list
+          htmx.ajax("POST", "/add-lot", {
+            target: "#lot-list",
+            swap: "beforeend",
+            values: {
+              feature: JSON.stringify(featUnproj, null, 2),
+            },
+          });
+
+          // Update the vector layer
+          vectorLayer.changed();
+
+          // Clear the input field after successful addition
+          document.getElementById("lot-input").value = "";
+        } else {
+          alert("No matching lot found. Please check the lot/plan format.");
+        }
+      }
+
+      htmx.on("htmx:beforeRequest", (evt) => {
+        if (evt.detail.pathInfo.requestPath === "/report") {
+          evt.target
+            .querySelector(".htmx-indicator")
+            .classList.replace("hidden", "block");
+        }
+        if (evt.detail.pathInfo.requestPath === "/delete-all") {
+          // Clear all selected features
+        //   clickedFeatures.clear();
+          clickedFeaturesID.clear();
+          lotIdToFeature.clear();
+          // Trigger a redraw of the vector layer
+          vectorLayer.changed();
+        }
+      });
+
+      htmx.on("htmx:afterRequest", (evt) => {
+        if (evt.detail.pathInfo.requestPath === "/report") {
+          evt.target
+            .querySelector(".htmx-indicator")
+            .classList.replace("block", "hidden");
+        }
+        if (evt.detail.pathInfo.requestPath === "/remove-lot") {
+          const params = new URLSearchParams(
+            evt.detail.requestConfig.parameters
+          );
+          const lotId = params.get("lot_id").replace("lot-", "");
+          const feature = lotIdToFeature.get(lotId);
+          if (feature) {
+            // clickedFeatures.delete(feature);
+            clickedFeaturesID.delete(feature.getProperties().OBJECTID);
+            lotIdToFeature.delete(lotId);
+            vectorLayer.changed();
+          }
+        }
+      });
+
+      const defaultStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: "rgba(128, 128, 128, 0.8)",
+          width: 1,
+          lineDash: [4, 4],
+        }),
+        fill: new ol.style.Fill({
+          color: "rgba(255, 255, 255, 0)", // Completely transparent fill
+        }),
+      });
+
+      const hoverStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: "rgba(255, 172, 28, 1.0)",
+          width: 2,
+          lineDash: [4, 4],
+        }),
+        fill: new ol.style.Fill({
+          color: "rgba(255, 172, 28, 0.4)",
+        }),
+      });
+
+      const clickedStyle = new ol.style.Style({
+        stroke: new ol.style.Stroke({
+          color: "rgba(255, 0, 0, 1.0)",
+          width: 3,
+          lineDash: [4, 4],
+        }),
+        fill: new ol.style.Fill({
+          color: "rgba(255, 172, 28, 0.6)",
+        }),
+      });
+
+      const osmLayer = new ol.layer.Tile({
+        source: new ol.source.OSM(),
+      });
+
+      const vectorLayer = new ol.layer.VectorTile({
+        declutter: true,
+        source: new olpmtiles.PMTilesVectorSource({
+          url: "https://storage.googleapis.com/terrakio-vector/WWF/QLD/qld_cadastral.pmtiles",
+          attributions: ["© Land Information New Zealand"],
+        }),
+        style: function (feature) {
+          // Check if this feature is in the clicked features set
+        //   if (
+        //     [...clickedFeatures].some(
+        //       (f) =>
+        //         f.getProperties().OBJECTID === feature.getProperties().OBJECTID
+        //     )
+        //   ) {
+        //     return clickedStyle;
+        //   }
+        if (clickedFeaturesID.has(feature.getProperties().OBJECTID)) {
+            return clickedStyle;
+          }
+          // Check if this is the hovered feature
+          if (
+            feature &&
+            hoveredFeature &&
+            feature.getProperties().OBJECTID ===
+              hoveredFeature.getProperties().OBJECTID
+          ) {
+            return hoverStyle;
+          }
+          return defaultStyle;
+        },
+      });
+
+      ol.proj.useGeographic();
+
+      // Create FAO WMS layer
+      const faoWMSLayer = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: "https://dev-eu.terrak.io/wms",
+          params: {
+            expression: "Defqld.fao",
+            srs: "EPSG:3857",
+            vmin: 0,
+            vmax: 3,
+            cmap: "defor",
+          },
+          tileLoadFunction: function (tile, src) {
+            src = src
+              .replace("BBOX", "bbox")
+              .replace("WIDTH", "width")
+              .replace("HEIGHT", "height");
+            tile.getImage().src = src;
+          },
+        }),
+        visible: false,
+      });
+
+      // Create AUS WMS layer
+      const ausWMSLayer = new ol.layer.Tile({
+        source: new ol.source.TileWMS({
+          url: "https://dev-eu.terrak.io/wms",
+          params: {
+            expression: "Defqld.aus",
+            srs: "EPSG:3857",
+            vmin: 0,
+            vmax: 3,
+            cmap: "defor",
+          },
+          tileLoadFunction: function (tile, src) {
+            src = src
+              .replace("BBOX", "bbox")
+              .replace("WIDTH", "width")
+              .replace("HEIGHT", "height");
+            tile.getImage().src = src;
+          },
+        }),
+        visible: true,
+      });
+
+      // Add these event listeners
+      faoWMSLayer.getSource().on("tileloadstart", function (evt) {
+        console.log("FAO WMS tile load started", evt);
+      });
+
+      faoWMSLayer.getSource().on("tileloadend", function (evt) {
+        console.log("FAO WMS tile loaded successfully", evt);
+      });
+
+      faoWMSLayer.getSource().on("tileloaderror", function (evt) {
+        console.error("FAO WMS tile load error:", evt);
+      });
+
+      const satelliteLayer = new ol.layer.Tile({
+        title: "Google Satellite",
+        visible: false,
+        source: new ol.source.XYZ({
+          url: "http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}",
+          maxZoom: 19,
+        }),
+      });
+
+      const map = new ol.Map({
+        layers: [
+          osmLayer,
+          satelliteLayer,
+          faoWMSLayer,
+          ausWMSLayer,
+          vectorLayer,
+        ],
+        target: "map",
+        view: new ol.View({
+          center: [146.0, -21.0],
+          zoom: 6,
+        }),
+      });
+
+      map.on("click", function (evt) {
+        const pixel = map.getEventPixel(evt.originalEvent);
+        const hasFeature = map.hasFeatureAtPixel(pixel, {
+          layerFilter: function (layer) {
+            return layer === vectorLayer;
+          },
+        });
+
+        if (!hasFeature) {
+          return;
+        }
+
+        map.forEachFeatureAtPixel(
+          pixel,
+          function (feature) {
+            const properties = feature.getProperties();
+            const lot_id = properties.OBJECTID;
+
+            // if (clickedFeatures.has(feature)) {
+            if (clickedFeaturesID.has(lot_id)) {
+              // If feature is already clicked, remove it
+            //   clickedFeatures.delete(feature);
+                clickedFeaturesID.delete(lot_id);
+              lotIdToFeature.delete(lot_id.toString());
+
+              // Remove from the lot list using HTMX
+              const elementToRemove = document.getElementById(`lot-${lot_id}`);
+              if (elementToRemove) {
+                elementToRemove.remove();
+              }
+              vectorLayer.changed();
+            } else {
+            //   clickedFeatures.add(feature);
+              clickedFeaturesID.add(lot_id);
+              vectorLayer.changed();
+
+              const inflatedCoordinates =
+                ol.geom.flat.inflate.inflateCoordinatesArray(
+                  feature.getFlatCoordinates(),
+                  0,
+                  feature.getEnds(),
+                  2
+                );
+
+              const poly = new ol.geom.Polygon(inflatedCoordinates);
+              // calculate the area of the feature
+              let area = ol.sphere.getArea(poly, {
+                 projection: "EPSG:3857",
+                 radius: 6378137,
+              });
+              
+              poly.transform("EPSG:3857", "EPSG:4326");
+              properties.area = area/10000; // convert to hectares
+
+              const featUnproj = {
+                type: "Feature",
+                properties: properties,
+                geometry: {
+                  type: feature.getGeometry().getType(),
+                  coordinates: poly.getCoordinates(),
+                },
+              };
+
+              if (lot_id) {
+                lotIdToFeature.set(lot_id.toString(), feature);
+              }
+              //console.log(JSON.stringify(featUnproj, null, 2));
+
+              htmx.ajax("POST", "/add-lot", {
+                target: "#lot-list",
+                swap: "beforeend",
+                values: {
+                  feature: JSON.stringify(featUnproj, null, 2),
+                },
+              });
+            }
+          },
+          {
+            layerFilter: function (layer) {
+              return layer === vectorLayer;
+            },
+          }
+        );
+      });
+
+      const featureInfoDiv = document.createElement("div");
+      featureInfoDiv.id = "feature-info";
+      featureInfoDiv.className =
+        "absolute top-16 right-4 bg-white p-4 rounded shadow-lg z-10 max-w-md";
+      document.querySelector("#map").parentNode.appendChild(featureInfoDiv);
+
+      map.on("pointermove", function (evt) {
+        if (evt.dragging) {
+          return;
+        }
+
+        const pixel = map.getEventPixel(evt.originalEvent);
+        const hit = map.hasFeatureAtPixel(pixel, {
+          layerFilter: function (layer) {
+            return layer === vectorLayer;
+          },
+        });
+
+        map.getTargetElement().style.cursor = hit ? "pointer" : "";
+
+        const previousHoveredFeature = hoveredFeature;
+        hoveredFeature = hit
+          ? map.getFeaturesAtPixel(pixel, {
+              layerFilter: function (layer) {
+                return layer === vectorLayer;
+              },
+            })[0]
+          : null;
+
+        if (previousHoveredFeature !== hoveredFeature) {
+          vectorLayer.changed();
+        }
+
+        if (!hit) {
+          featureInfoDiv.textContent =
+            "Hover over a property to see its properties";
+          return;
+        }
+
+        map.forEachFeatureAtPixel(
+          pixel,
+          function (feature) {
+            const properties = feature.getProperties();
+            delete properties.acc_code;
+            delete properties.layer;
+            delete properties.shape_Area;
+            delete properties.shape_Length;
+            const formattedProperties = Object.entries(properties)
+              .filter(([key]) => key !== "geometry" && key !== "OBJECTID")
+              .map(([key, value]) => `${key}: ${value}`)
+              .join("\n");
+
+            featureInfoDiv.innerHTML =
+              formattedProperties
+                .split("\n")
+                .map((line) => `<div>${line}</div>`)
+                .join("") || "No properties available";
+
+            return true;
+          },
+          {
+            layerFilter: function (layer) {
+              return layer === vectorLayer;
+            },
+          }
+        );
+      });
+
+      // Modify the toggleLayerControl function to stop event propagation
+      function toggleLayerControl(event) {
+        if (event) {
+          event.stopPropagation(); // Prevent the document click from immediately closing the panel
+        }
+        const control = document.getElementById("layer-control");
+        control.classList.toggle("hidden");
+      }
+
+      function toggleLayer(layerName) {
+        if (layerName === "osm") {
+          osmLayer.setVisible(!osmLayer.getVisible());
+        } else if (layerName === "vector") {
+          vectorLayer.setVisible(!vectorLayer.getVisible());
+        } else if (layerName === "satellite") {
+          satelliteLayer.setVisible(!satelliteLayer.getVisible());
+        }
+      }
+
+      function toggleForestDefinition(definition) {
+        const faoButton = document.getElementById("fao-button");
+        const ausButton = document.getElementById("aus-button");
+        const reportButton = document.getElementById("report-button");
+
+        if (definition === "fao") {
+          faoButton.className =
+            "relative inline-flex items-center px-2 py-1 text-sm rounded-l-lg bg-green-600 text-white hover:bg-green-700 focus:z-10 focus:outline-none active:bg-green-700";
+          ausButton.className =
+            "relative -ml-px inline-flex items-center px-2 py-1 text-sm rounded-r-lg bg-gray-200 text-gray-700 hover:bg-gray-300 focus:z-10 focus:outline-none";
+          faoWMSLayer.setVisible(true);
+          ausWMSLayer.setVisible(false);
+          reportButton?.setAttribute("hx-vals", '{"dataset": "fao"}');
+        } else {
+          faoButton.className =
+            "relative inline-flex items-center px-2 py-1 text-sm rounded-l-lg bg-gray-200 text-gray-700 hover:bg-gray-300 focus:z-10 focus:outline-none";
+          ausButton.className =
+            "relative -ml-px inline-flex items-center px-2 py-1 text-sm rounded-r-lg bg-green-600 text-white hover:bg-green-700 focus:z-10 focus:outline-none active:bg-green-700";
+          faoWMSLayer.setVisible(false);
+          ausWMSLayer.setVisible(true);
+          reportButton?.setAttribute("hx-vals", '{"dataset": "aus"}');
+        }
+      }
+
+      // Close the panel when clicking outside
+      document.addEventListener("click", function (event) {
+        const control = document.getElementById("layer-control");
+        const button = event.target.closest("button");
+        if (
+          !control.contains(event.target) &&
+          !button?.onclick?.toString().includes("toggleLayerControl")
+        ) {
+          control.classList.add("hidden");
+        }
+      });
+
+      // Function to create a copy of the main map
+      function createReportMap() {
+        const mainMap = map; // Reference to the original map
+
+        // Create new layer instances that mirror the main map's layers
+        const reportOsmLayer = new ol.layer.Tile({
+          source: new ol.source.OSM(),
+          visible: osmLayer.getVisible(),
+        });
+
+        const reportSatelliteLayer = new ol.layer.Tile({
+          source: new ol.source.XYZ({
+            url: "http://mt0.google.com/vt/lyrs=s&hl=en&x={x}&y={y}&z={z}",
+            maxZoom: 19,
+          }),
+          visible: satelliteLayer.getVisible(),
+        });
+
+        const reportVectorLayer = new ol.layer.VectorTile({
+          declutter: true,
+          source: new olpmtiles.PMTilesVectorSource({
+            url: "https://storage.googleapis.com/terrakio-vector/WWF/QLD/qld_cadastral.pmtiles",
+            attributions: ["© Land Information New Zealand"],
+          }),
+          visible: vectorLayer.getVisible(),
+          style: function (feature) {
+            // Copy the style logic from the main map
+            // if (
+            //   [...clickedFeatures].some(
+            //     (f) =>
+            //       f.getProperties().OBJECTID ===
+            //       feature.getProperties().OBJECTID
+            //   )
+            // )
+            if (clickedFeaturesID.has(feature.getProperties().OBJECTID))
+            {
+              return new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                  color: "#8B0000",
+                  width: 2,
+                }),
+                fill: new ol.style.Fill({
+                  color: "#FF4040",
+                }),
+              });
+            }
+            return new ol.style.Style({
+              stroke: new ol.style.Stroke({
+                color: "rgba(128, 128, 128, 0.2)",
+                width: 1,
+              }),
+              fill: new ol.style.Fill({
+                color: "rgba(255, 255, 255, 0)",
+              }),
+            });
+          },
+        });
+
+        const reportFaoWMSLayer = new ol.layer.Tile({
+          source: new ol.source.TileWMS({
+            url: "https://dev-eu.terrak.io/wms",
+            params: {
+              expression: "Defqld.fao",
+              srs: "EPSG:3857",
+              vmin: 0,
+              vmax: 3,
+              cmap: "defor",
+            },
+            tileLoadFunction: function (tile, src) {
+              src = src
+                .replace("BBOX", "bbox")
+                .replace("WIDTH", "width")
+                .replace("HEIGHT", "height");
+              tile.getImage().src = src;
+            },
+          }),
+          visible: faoWMSLayer.getVisible(),
+        });
+
+        const reportAusWMSLayer = new ol.layer.Tile({
+          source: new ol.source.TileWMS({
+            url: "https://dev-eu.terrak.io/wms",
+            params: {
+              expression: "Defqld.aus",
+              srs: "EPSG:3857",
+              vmin: 0,
+              vmax: 3,
+              cmap: "defor",
+            },
+            tileLoadFunction: function (tile, src) {
+              src = src
+                .replace("BBOX", "bbox")
+                .replace("WIDTH", "width")
+                .replace("HEIGHT", "height");
+              tile.getImage().src = src;
+            },
+          }),
+          visible: ausWMSLayer.getVisible(),
+        });
+
+        // Create a new map with the copied layers
+        const reportMap = new ol.Map({
+          layers: [
+            reportSatelliteLayer,
+            reportOsmLayer,
+            reportFaoWMSLayer,
+            reportAusWMSLayer,
+            reportVectorLayer,
+          ],
+          target: "report-map-container",
+          view: new ol.View({
+            // Copy the current view state from the main map
+            center: mainMap.getView().getCenter(),
+            zoom: mainMap.getView().getZoom(),
+          }),
+        });
+
+        // Make sure the map fills its container properly
+        setTimeout(() => {
+          reportMap.updateSize();
+        }, 100);
+
+        return reportMap;
+      }
+
+      // Set up event handler for report creation
+      document
+        .getElementById("report-button")
+        .addEventListener("click", function () {
+          // Wait for the report overlay HTML to be loaded
+          document.getElementById("report-overlay").addEventListener(
+            "htmx:afterSwap",
+            function () {
+              const reportMapContainer = document.getElementById(
+                "report-map-container"
+              );
+              if (reportMapContainer) {
+                reportMapContainer.style.minHeight = "400px";
+                reportMapContainer.style.position = "relative";
+                createReportMap();
+              }
+            },
+            { once: true }
+          ); // Only handle the first swap event
+        });
+
+      // Add resize observer to handle report map container size changes
+      const resizeObserver = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.target.id === "report-map-container") {
+            const reportMapContainer = document.getElementById(
+              "report-map-container"
+            );
+            if (reportMapContainer) {
+              const maps = ol.Map.getInstance(reportMapContainer);
+              if (maps) {
+                maps.updateSize();
+              }
+            }
+          }
+        }
+      });
+
+      // Clean up
+      window.addEventListener("beforeunload", () => {
+        if (resizeObserver) {
+          resizeObserver.disconnect();
+        }
+      });
+    </script>
+
+    <div
+      id="report-overlay"
+      class="fixed inset-0 bg-black bg-opacity-50 z-50 overflow-y-auto hidden"
+    >
+      <div class="min-h-screen px-4 flex items-center justify-center">
+        <div
+          id="report-content"
+          class="bg-white w-full max-w-5xl rounded-lg shadow-xl m-4"
+        >
+          <!-- Report content will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

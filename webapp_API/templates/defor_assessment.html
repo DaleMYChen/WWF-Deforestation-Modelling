@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Deforestation Assessment Form</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-50">
+    <div class="max-w-4xl mx-auto p-6 my-10">
+      <!-- Step 1 -->
+      <div id="step1" class="space-y-6">
+        <div class="border border-green-500 rounded-lg bg-white p-6">
+          <div class="flex items-center gap-3 mb-6">
+            <i class="fas fa-balance-scale text-green-600 fa-lg"></i>
+            <h2 class="text-lg font-semibold text-gray-900">
+              Do you believe the clearing was legal under Federal,
+              State/Territory and Local Government laws?
+            </h2>
+          </div>
+          <div class="flex gap-4 justify-center">
+            <button
+              onclick="handleAnswer('isLegal', true)"
+              class="bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition"
+            >
+              Yes
+            </button>
+            <button
+              onclick="handleAnswer('isLegal', false)"
+              class="border-2 border-green-600 text-green-600 px-8 py-3 rounded-lg font-medium hover:bg-green-50 transition"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div id="step2" class="space-y-6 hidden">
+        <div class="border border-green-500 rounded-lg bg-white p-6">
+          <div class="flex items-center gap-3 mb-6">
+            <i class="fas fa-check-circle text-green-600 fa-lg"></i>
+            <h2 class="text-lg font-semibold text-gray-900">
+              Do you believe the clearing complies with deforestation-free
+              allowances?
+            </h2>
+          </div>
+          <div class="flex gap-4 justify-center">
+            <button
+              onclick="handleAnswer('isCompliant', true)"
+              class="bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition"
+            >
+              Yes
+            </button>
+            <button
+              onclick="handleAnswer('isCompliant', false)"
+              class="border-2 border-green-600 text-green-600 px-8 py-3 rounded-lg font-medium hover:bg-green-50 transition"
+            >
+              No
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div id="step3" class="space-y-6 hidden">
+        <div class="border border-gray-200 rounded-lg bg-white p-6">
+          <div class="flex items-center gap-3 mb-6">
+            <i class="fas fa-list-alt text-green-600 fa-lg"></i>
+            <h2 class="text-lg font-semibold text-gray-900">
+              Select the relevant topic:
+            </h2>
+          </div>
+          <div class="space-y-4">
+            <!-- Topics -->
+            <div class="grid grid-cols-1 gap-4">
+              <!-- Weeds -->
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <i class="fas fa-seedling text-green-600 fa-lg"></i>
+                  <span class="font-medium text-gray-900">Weeds</span>
+                </div>
+                <p class="text-gray-600 mb-4">
+                  Was the detected forest loss caused by species that are not
+                  native to the site (i.e. weed control)?
+                </p>
+                <div class="flex gap-4">
+                  <button
+                    onclick="handleTopicAnswer('weeds', true)"
+                    class="flex-1 py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onclick="handleTopicAnswer('weeds', false)"
+                    class="flex-1 py-2 px-4 border-2 border-green-600 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+
+              <!-- Regrowth Management -->
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <i class="fas fa-leaf text-green-600 fa-lg"></i>
+                  <span class="font-medium text-gray-900"
+                    >Regrowth Management</span
+                  >
+                </div>
+                <p class="text-gray-600 mb-4">
+                  Was the detected forest loss related to vegetation that was a
+                  monoculture and/or lacked the structure and species diversity
+                  of the forest natural to the site?
+                </p>
+                <div class="flex gap-4">
+                  <button
+                    onclick="handleTopicAnswer('regrowth', true)"
+                    class="flex-1 py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onclick="handleTopicAnswer('regrowth', false)"
+                    class="flex-1 py-2 px-4 border-2 border-green-600 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+
+              <!-- Natural Disaster -->
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <i
+                    class="fas fa-exclamation-triangle text-green-600 fa-lg"
+                  ></i>
+                  <span class="font-medium text-gray-900"
+                    >Natural Disaster</span
+                  >
+                </div>
+                <p class="text-gray-600 mb-4">
+                  Is the affected forest being allowed to regenerate?
+                </p>
+                <div class="flex gap-4">
+                  <button
+                    onclick="handleTopicAnswer('disaster', true)"
+                    class="flex-1 py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onclick="handleTopicAnswer('disaster', false)"
+                    class="flex-1 py-2 px-4 border-2 border-green-600 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+
+              <!-- Infrastructure -->
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <i class="fas fa-building text-green-600 fa-lg"></i>
+                  <span class="font-medium text-gray-900">Infrastructure</span>
+                </div>
+                <p class="text-gray-600 mb-4">
+                  Was the detected forest loss "minimal level" as it was in
+                  XXXX?
+                </p>
+                <div class="flex gap-4">
+                  <button
+                    onclick="handleTopicAnswer('infrastructure', true)"
+                    class="flex-1 py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onclick="handleTopicAnswer('infrastructure', false)"
+                    class="flex-1 py-2 px-4 border-2 border-green-600 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+
+              <!-- Grassland -->
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <i class="fas fa-mountain text-green-600 fa-lg"></i>
+                  <span class="font-medium text-gray-900"
+                    >Grassland encroachment</span
+                  >
+                </div>
+                <p class="text-gray-600 mb-4">
+                  Was the forest loss due to clearing trees that were
+                  encroaching onto a natural grassland area?
+                </p>
+                <div class="flex gap-4">
+                  <button
+                    onclick="handleTopicAnswer('grassland', true)"
+                    class="flex-1 py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onclick="handleTopicAnswer('grassland', false)"
+                    class="flex-1 py-2 px-4 border-2 border-green-600 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+
+              <!-- Fodder -->
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <i class="fas fa-wheat-awn text-green-600 fa-lg"></i>
+                  <span class="font-medium text-gray-900"
+                    >Fodder harvesting</span
+                  >
+                </div>
+                <p class="text-gray-600 mb-4">
+                  Was the forest loss due to harvesting done in accordance with
+                  regulations?
+                </p>
+                <div class="flex gap-4">
+                  <button
+                    onclick="handleTopicAnswer('fodder', true)"
+                    class="flex-1 py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onclick="handleTopicAnswer('fodder', false)"
+                    class="flex-1 py-2 px-4 border-2 border-green-600 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+
+              <!-- Plantation -->
+              <div class="border border-gray-200 rounded-lg p-4">
+                <div class="flex items-center gap-3 mb-3">
+                  <i class="fas fa-tree text-green-600 fa-lg"></i>
+                  <span class="font-medium text-gray-900"
+                    >Plantation harvesting</span
+                  >
+                </div>
+                <p class="text-gray-600 mb-4">
+                  Was the forest loss due to harvesting a plantation?
+                </p>
+                <div class="flex gap-4">
+                  <button
+                    onclick="handleTopicAnswer('plantation', true)"
+                    class="flex-1 py-2 px-4 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onclick="handleTopicAnswer('plantation', false)"
+                    class="flex-1 py-2 px-4 border-2 border-green-600 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                  >
+                    No
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="text-sm text-gray-500 mt-4">
+              Mapped 'Forest loss' includes all forest loss which may include
+              weed control, regrowth management, natural disaster,
+              infrastructure development, and/or detection of areas that are not
+              considered 'natural forest' such as plantations areas. Note: this
+              is not necessarily 'deforestation' as other factors need to be
+              considered.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Result -->
+      <div id="result" class="hidden">
+        <div id="resultContent" class="mt-8 rounded-lg">
+          <!-- Content will be dynamically inserted here -->
+        </div>
+        <button
+          onclick="resetForm()"
+          class="mt-6 w-full py-3 px-4 bg-green-600 text-white font-medium hover:bg-green-700 rounded-lg transition-colors"
+        >
+          Start Over
+        </button>
+      </div>
+    </div>
+    <script>
+      const state = {
+        isLegal: null,
+        isCompliant: null,
+        selectedTopic: null,
+        topicAnswer: null,
+      };
+
+      function showStep(stepNumber) {
+        document
+          .querySelectorAll('[id^="step"]')
+          .forEach((step) => step.classList.add("hidden"));
+        document.getElementById("result").classList.add("hidden");
+        if (stepNumber <= 3) {
+          document
+            .getElementById(`step${stepNumber}`)
+            .classList.remove("hidden");
+        }
+      }
+
+      function handleAnswer(question, answer) {
+        state[question] = answer;
+
+        if (question === "isLegal" && !answer) {
+          showResult();
+        } else if (question === "isLegal" && answer) {
+          showStep(2);
+        } else if (question === "isCompliant" && !answer) {
+          showResult();
+        } else if (question === "isCompliant" && answer) {
+          showStep(3);
+        }
+      }
+
+      function handleTopicAnswer(topic, answer) {
+        state.selectedTopic = topic;
+        state.topicAnswer = answer;
+        showResult();
+      }
+
+      function getResult() {
+        if (!state.isLegal || !state.isCompliant) {
+          return {
+            status: "Forest loss detected",
+            class: "bg-white border border-red-500",
+            icon: '<i class="fas fa-exclamation-triangle text-red-500 text-xl"></i>',
+            textColor: "text-gray-900",
+          };
+        }
+        if (state.topicAnswer) {
+          return {
+            status: "No forest loss detected",
+            class: "bg-white border border-green-500",
+            icon: '<i class="fas fa-check-circle text-green-600 text-xl"></i>',
+            textColor: "text-gray-900",
+          };
+        }
+        return {
+          status: "D-free status possible",
+          class: "bg-white border border-yellow-500",
+          icon: '<i class="fas fa-question-circle text-yellow-500 text-xl"></i>',
+          textColor: "text-gray-900",
+        };
+      }
+
+      function showResult() {
+        const result = getResult();
+        document
+          .querySelectorAll('[id^="step"]')
+          .forEach((step) => step.classList.add("hidden"));
+
+        const resultContent = document.getElementById("resultContent");
+        resultContent.className = `p-4 rounded-lg flex items-center gap-3 ${result.class}`;
+        resultContent.innerHTML = `
+            ${result.icon}
+            <div>
+                <h3 class="font-medium ${result.textColor}">${
+          result.status
+        }</h3>
+                ${
+                  result.status === "D-free status possible"
+                    ? '<p class="text-sm text-gray-600 mt-1">Make good process will likely be required to gain d-free status</p>'
+                    : ""
+                }
+            </div>
+        `;
+
+        document.getElementById("result").classList.remove("hidden");
+      }
+
+      function resetForm() {
+        state.isLegal = null;
+        state.isCompliant = null;
+        state.selectedTopic = null;
+        state.topicAnswer = null;
+        showStep(1);
+      }
+
+      // Initialize form
+      showStep(1);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centre for Environmental Markets - WCF Downloads</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v9.0.0/ol.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .separator {
+            height: 4px;
+            background: linear-gradient(90deg, #15803d 0%, #166534 100%);
+            border-radius: 2px;
+        }
+
+        .eco-pattern {
+            background-image: radial-gradient(#16a34a 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .navbar-item {
+            position: relative;
+        }
+
+        .navbar-item::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .navbar-item:hover::after {
+            width: 100%;
+        }
+
+        .content-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .file-item {
+            transition: all 0.2s ease;
+        }
+
+        .file-item:hover {
+            background-color: #f0fdf4;
+        }
+        .htmx-indicator {
+            display: none;
+        }
+        .htmx-request .htmx-indicator {
+            display: inline;
+        }
+        .htmx-request.htmx-indicator {
+            display: inline;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50">
+    <!-- Fixed Navbar -->
+    <header class="fixed w-full top-0 z-50 bg-green-700 shadow-lg">
+        <nav class="content-container">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="bg-white p-2 rounded-lg">
+                        <img src="/static/images/australian-national-university-logo.webp" alt="ANU Logo" class="h-8">
+                    </div>
+                    <span class="ml-3 text-white font-semibold text-lg">Centre for Environmental Markets</span>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="/" class="navbar-item text-white hover:text-green-200 transition font-medium">Home</a>
+                    <a href="#" class="navbar-item text-white hover:text-green-200 transition font-medium">About</a>
+                    <a href="#" class="navbar-item text-white hover:text-green-200 transition font-medium">Structure</a>
+                    <a href="#" class="navbar-item text-white hover:text-green-200 transition font-medium">Contact</a>
+                    <a href="/data" class="navbar-item text-white hover:text-green-200 transition font-medium">Downloads</a>
+                    <button
+                        class="bg-white text-green-700 px-4 py-2 rounded-lg font-medium hover:bg-green-100 transition">
+                        Get Started
+                    </button>
+                </div>
+
+                <div class="md:hidden">
+                    <button class="text-white">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-24 pb-16">
+        <div class="content-container">
+            <!-- Page Title Section -->
+            <div class="mb-8">
+                <h1 class="text-4xl font-bold text-gray-900">Data Downloads</h1>
+                <div class="separator w-24 mt-4"></div>
+                <p class="mt-4 text-lg text-gray-600">
+                    Access and download ecosystem change datasets for research and analysis
+                </p>
+                <div class="mt-2">
+                    <a href="/data" class="text-green-600 hover:text-green-800">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Datasets
+                    </a>
+                </div>
+            </div>
+
+            <!-- Main Content with Two Panels -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Left Panel: Region Information -->
+                <div class="lg:col-span-1">
+                    <div class="bg-white rounded-xl shadow-md p-6">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">WCF Data Info</h2>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <h3 class="text-lg font-medium text-green-700">Data Description</h3>
+                                <p class="text-gray-600 mt-2">
+                                    Each file contains high-resolution (10m) WCF data in GeoTIFF format. Values range from 0-100, representing percentage cover. No-data values are set to 0.
+                                </p>
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-medium text-green-700">Spatial Extent</h3>
+                                <p class="text-gray-600 mt-2">
+                                    The Australian continent is divided using a 4x4 grid defined in Australian Albers Equal area projection. Each tile is identified with a number starting at the centre of the grid. This allows users to download just the areas of interest.
+                                </p>
+                                
+                                <!-- Region map placeholder -->
+                                <div class="mt-3 bg-green-50 p-3 rounded-lg border border-green-200">
+                                    <div class="rounded-lg overflow-hidden">
+                                        <img src="{{ url_for('static', filename='/images/aoidiv.png') }}" alt="Australia region divisions map" class="w-full h-auto">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-medium text-green-700">Temporal Extent</h3>
+                                <p class="text-gray-600 mt-2">
+                                    WCF data is available for each of the years 2022 and 2023.
+                                </p>
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-medium text-green-700">Terms of Use</h3>
+                                <p class="text-gray-600 mt-2">
+                                    All datasets are provided under a Creative Commons Attribution 4.0 International License. Attribution to the Centre for Environmental Markets is required.
+                                </p>
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-medium text-green-700">Support</h3>
+                                <p class="text-gray-600 mt-2">
+                                    For technical assistance with data interpretation or additional information, please contact our data support team.
+                                </p>
+                                <a href="#" class="inline-block mt-3 text-green-600 hover:text-green-800 font-medium">
+                                    <i class="fas fa-envelope mr-2"></i>Contact Data Support
+                                </a>
+                            </div>
+                        
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Panel: Files to Download -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                        <div class="border-b border-gray-200 p-6">
+                            <div class="flex items-center justify-between">
+                                <h2 class="text-xl font-semibold text-gray-800">{{ dataset }} Products</h2>
+                                <div class="relative">
+                                    <input type="text" 
+                                           id="search-input" 
+                                           name="q" 
+                                           placeholder="Search files..." 
+                                           class="w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                                           hx-get="/search/wcf"
+                                           hx-trigger="keyup changed delay:300ms, search"
+                                           hx-target="#products-container"
+                                           hx-indicator="#search-indicator">
+                                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                                    <div id="search-indicator" class="htmx-indicator absolute right-3 top-3">
+                                        <i class="fas fa-spinner fa-spin text-green-500"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="products-container" class="divide-y divide-gray-200">
+                            {% for product in products %}
+                            <!-- Product Item -->
+                            <div class="p-6 file-item product-item" data-filename="{{ product.filename }}">
+                                <div class="flex justify-between items-start">
+                                    <div>
+                                        <h3 class="text-lg font-medium text-gray-900">{{ product.filename|replace('.tif', '') }}</h3>
+                                        <p class="text-gray-600 mt-1">{{ dataset }} data for Region {{ product.region }} - {{ product.year }}</p>
+                                        <div class="mt-3 flex items-center text-sm text-gray-500">
+                                            <span class="mr-4"><i class="far fa-calendar mr-1"></i> Year: {{ product.year }}</span>
+                                            <span class="mr-4"><i class="fas fa-map-marker-alt mr-1"></i> Region: {{ product.region }}</span>
+                                            <span class="mr-4"><i class="fas fa-hdd mr-1"></i> Size: {{ '%.2f'|format(product.size) }} GB</span>
+                                            <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">{{ product.format|upper }}</span>
+                                        </div>
+                                    </div>
+                                    <a href="{{ product.download_link }}" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
+                                        <i class="fas fa-download mr-2"></i>Download
+                                    </a>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <!-- No Results Message -->
+                        <div id="no-results" class="p-8 text-center hidden">
+                            <i class="fas fa-search text-4xl text-gray-300 mb-3"></i>
+                            <p class="text-gray-500 text-lg">No matching files found</p>
+                            <p class="text-gray-400 mt-1">Try a different search term</p>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div class="p-6 border-t border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div class="text-sm text-gray-700">
+                                    Showing <span class="font-medium">1</span> to <span class="font-medium">{{ products|length }}</span> of <span class="font-medium">{{ products|length }}</span> results
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-600 bg-white hover:bg-gray-50" disabled>
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+                                    <button class="px-3 py-1 border border-gray-300 rounded-md text-white bg-green-600 hover:bg-green-700">1</button>
+                                    <button class="px-3 py-1 border border-gray-300 rounded-md text-gray-600 bg-white hover:bg-gray-50" disabled>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-green-800 text-white py-12">
+        <div class="content-container">
+            <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-white">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="hover:text-green-200">Home</a></li>
+                            <li><a href="#" class="hover:text-green-200">About</a></li>
+                            <li><a href="#" class="hover:text-green-200">Structure</a></li>
+                            <li><a href="/data" class="hover:text-green-200">Downloads</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Resources</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="hover:text-green-200">Documentation</a></li>
+                            <li><a href="#" class="hover:text-green-200">Research</a></li>
+                            <li><a href="#" class="hover:text-green-200">Data Access</a></li>
+                            <li><a href="#" class="hover:text-green-200">Publications</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                        <ul class="space-y-2">
+                            <li>Centre for Environmental Markets</li>
+                            <li>Australian National University</li>
+                            <li>Canberra, ACT</li>
+                            <li><a href="#" class="hover:text-green-200"><span class="__cf_email__" data-cfemail="224b4c444d62474c544b504d4c4f474c56434e4f4350494756510c434c570c4746570c4357">[email&#160;protected]</span></a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-8 pt-8 border-t border-green-600">
+                    <p class="text-center text-white">
+                        © 2024 Centre for Environmental Markets - Australian National University
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script></body>
+
+</html>

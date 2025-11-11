@@ -1,0 +1,179 @@
+
+<div class="p-6">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            <div class="text-gray-500 text-sm mb-1">{{ now.strftime('%a %b %d %Y') }}</div>
+            <h1 class="text-3xl font-bold">
+                {% if dataset == "aus" %}
+                    Australian Forest change report
+                {% else %}
+                    FAO Forest change report
+                {% endif %}
+            </h1>
+        </div>
+        <div class="flex gap-3">
+            <button 
+                class="border-2 border-green-600 text-green-600 px-4 py-2 rounded-lg font-medium hover:bg-green-50 transition flex items-center gap-2"
+                onclick="document.getElementById('report-overlay').classList.add('hidden')"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                </svg>
+                Back
+            </button>
+            <button class="bg-green-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-700 transition flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z"/>
+                    <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z"/>
+                </svg>
+                Copy link
+            </button>
+        </div>
+    </div>
+
+    <div class="w-full h-64 bg-gray-200 rounded-lg mb-8 relative overflow-hidden" id="report-map-container">
+
+    </div>
+
+    <!-- Summary -->
+    <h2 class="text-2xl font-bold mb-4">Summary</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <!-- Parcels analyzed -->
+        <div class="border rounded-lg p-4">
+            <div class="text-4xl font-bold mb-2">{{ deforestation_results|length + no_deforestation_results|length }}</div>
+            <div class="text-gray-600 text-sm mb-2">parcel/s analysed</div>
+            <a href="#" class="text-blue-500 text-sm">Edit parcels</a>
+        </div>
+
+        <!-- No forest loss -->
+        <div class="border rounded-lg p-4 border-emerald-200">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="text-4xl font-bold">{{ no_deforestation_results|length }}</div>
+                <svg class="w-8 h-8 text-emerald-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <div class="text-gray-600 text-sm mb-2">No forest loss detected</div>
+            <a href="#" class="text-blue-500 text-sm">View details</a>
+        </div>
+
+        <!-- Forest loss detected -->
+        <div class="border rounded-lg p-4 border-red-200">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="text-4xl font-bold">{{ deforestation_results|length }}</div>
+                <svg class="w-8 h-8 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <div class="text-gray-600 text-sm mb-2">Forest loss detected</div>
+            <a href="#" class="text-blue-500 text-sm">View details</a>
+        </div>
+    </div>
+
+    <!-- Feedback section -->
+    <div class="bg-blue-50 rounded-lg p-6 mb-8">
+        <h3 class="font-bold mb-2">Something doesn't look right?</h3>
+        <p class="text-gray-600 mb-4">Please send through your feedback on any data.</p>
+        <button class="bg-blue-500 text-white px-4 py-2 rounded-md">Send feedback</button>
+    </div>
+
+    <!-- Details -->
+    <h2 class="text-2xl font-bold mb-4">Details</h2>
+
+    <!-- Forest loss warning -->
+    <!-- No forest loss section -->
+   <!-- No forest loss section -->
+<!-- No forest loss section -->
+<div class="border rounded-lg p-4 mb-4 border-emerald-200">
+    <div class="flex items-center gap-2">
+        <svg class="w-6 h-6 text-emerald-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+        </svg>
+        <h3 class="font-bold">No forest loss detected</h3>
+    </div>
+
+    <!-- Add table for no deforestation results -->
+    {% if no_deforestation_results %}
+    <div class="overflow-x-auto mt-4">
+        <table class="w-full">
+            <thead>
+                <tr class="border-b bg-green-50">
+                    <th class="text-left px-4 py-3 font-bold text-gray-600 text-xs">ID</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Total area<br>(ha)</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Forest cover in 2020<br>(ha)</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Forest loss 2021<br>(ha)</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Forest loss 2022<br>(ha)</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Forest loss 2023<br>(ha)</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Total forest loss<br>(ha)</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Deforestation<br>%</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm">
+                {% for result in no_deforestation_results %}
+                    <tr class="border-b bg-emerald-50">
+                        <td class="px-4 py-4 font-medium">{{ result.identifier }}</td>
+                        <td class="text-center px-4 py-4">{{ result.stats.area_ha | round(1)}}</td>
+                        <td class="text-center px-4 py-4">{{ result.stats.forest_area_ha | round(1)}}</td>
+                        <td class="text-center px-4 py-4">{{ result.stats.deforested_2021_area_ha | round(1)}}</td>
+                        <td class="text-center px-4 py-4">{{ result.stats.deforested_2022_area_ha | round(1)}}</td>
+                        <td class="text-center px-4 py-4">{{ result.stats.deforested_2023_area_ha | round(1)}}</td>
+                        <td class="text-center px-4 py-4">{{ result.stats.total_deforested_area_ha | round(1)}}</td>
+                        <td class="text-center px-4 py-4 font-medium">{{ result.stats.deforestation_perc_since_2020 | round(1) }}%</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Forest loss warning -->
+<div class="border rounded-lg p-4 border-red-200 mb-4">
+    <div class="flex items-start gap-2 mb-4">
+        <svg class="w-6 h-6 text-red-500 flex-shrink-0 mt-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+        </svg>
+        <h3 class="font-bold text-lg">Forest loss detected</h3>
+    </div>
+    
+    <p class="text-gray-600 text-sm mb-6">
+        Mapped 'Forest loss' includes all forest loss which may include weed control, regrowth management, natural disaster, infrastructure development, and/or detection of areas that are not considered 'natural forest' such as plantations areas. Note: this is not necessarily 'deforestation' as other factors need to be considered. See definitions section for further.
+    </p>
+
+    <!-- Data table -->
+    {% if deforestation_results %}
+    <div class="overflow-x-auto">
+        <table class="w-full">
+            <thead>
+                <tr class="border-b bg-amber-50">  <!-- Changed from bg-green-50 to bg-amber-50 -->
+                    <th class="text-left px-4 py-3 font-bold text-gray-600 text-xs">ID</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Total area<br>(ha)</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Forest cover in 2020<br>(ha)</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Forest loss 2021<br>(ha)</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Forest loss 2022<br>(ha)</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Forest loss 2023<br>(ha)</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Total forest loss<br>(ha)</th>
+                    <th class="text-center px-4 py-3 font-bold text-gray-600 text-xs">Deforestation<br>%</th>
+                </tr>
+            </thead>
+            <tbody class="text-sm">
+                {% for result in deforestation_results %}
+                    <tr class="border-b bg-amber-50">
+                        <td class="px-4 py-4 font-medium">{{ result.identifier }}</td>
+                        <td class="text-center px-4 py-4">{{ result.stats.area_ha | round(1)}}</td>
+                        <td class="text-center px-4 py-4">{{ result.stats.forest_area_ha | round(1)}}</td>
+                        <td class="text-center px-4 py-4">{{ result.stats.deforested_2021_area_ha | round(1)}}</td>
+                        <td class="text-center px-4 py-4">{{ result.stats.deforested_2022_area_ha | round(1)}}</td>
+                        <td class="text-center px-4 py-4">{{ result.stats.deforested_2023_area_ha | round(1)}}</td>
+                        <td class="text-center px-4 py-4">{{ result.stats.total_deforested_area_ha | round(1)}}</td>
+                        <td class="text-center px-4 py-4 font-medium">{{ result.stats.deforestation_perc_since_2020 | round(3) }}%</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endif %}
+</div>
+
+</div>  

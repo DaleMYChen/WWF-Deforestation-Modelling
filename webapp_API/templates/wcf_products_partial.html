@@ -1,0 +1,28 @@
+{% if products %}
+    {% for product in products %}
+    <!-- Product Item -->
+    <div class="p-6 file-item product-item">
+        <div class="flex justify-between items-start">
+            <div>
+                <h3 class="text-lg font-medium text-gray-900">{{ product.filename|replace('.tif', '') }}</h3>
+                <p class="text-gray-600 mt-1">{{ dataset }} data for Region {{ product.region }} - {{ product.year }}</p>
+                <div class="mt-3 flex items-center text-sm text-gray-500">
+                    <span class="mr-4"><i class="far fa-calendar mr-1"></i> Year: {{ product.year }}</span>
+                    <span class="mr-4"><i class="fas fa-map-marker-alt mr-1"></i> Region: {{ product.region }}</span>
+                    <span class="mr-4"><i class="fas fa-hdd mr-1"></i> Size: {{ '%.2f'|format(product.size) }} GB</span>
+                    <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded">{{ product.format|upper }}</span>
+                </div>
+            </div>
+            <a href="{{ product.download_link }}" target="_blank" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex items-center">
+                <i class="fas fa-download mr-2"></i>Download
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="p-8 text-center">
+        <i class="fas fa-search text-4xl text-gray-300 mb-3"></i>
+        <p class="text-gray-500 text-lg">No matching files found</p>
+        <p class="text-gray-400 mt-1">Try a different search term</p>
+    </div>
+{% endif %}

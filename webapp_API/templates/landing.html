@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centre for Environmental Markets</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ol@v9.0.0/dist/ol.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ol@v9.0.0/ol.css">
+    <script src="https://unpkg.com/ol-pmtiles@1.0.2/dist/olpmtiles.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Previous styles remain the same */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+        }
+
+        .card-hover {
+            transition: all 0.3s ease-in-out;
+        }
+
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .diagonal-box {
+            position: relative;
+            background: linear-gradient(45deg, #15803d 0%, #166534 100%);
+            transform: skewY(-3deg);
+        }
+
+        .diagonal-content {
+            transform: skewY(3deg);
+        }
+
+        .separator {
+            height: 4px;
+            background: linear-gradient(90deg, #15803d 0%, #166534 100%);
+            border-radius: 2px;
+        }
+
+        .eco-pattern {
+            background-image: radial-gradient(#16a34a 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .navbar-item {
+            position: relative;
+        }
+
+        .navbar-item::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 0;
+            background-color: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .navbar-item:hover::after {
+            width: 100%;
+        }
+
+        /* New styles for better layout */
+        .content-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero-overlay {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-section {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('/static/images/centre_background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+    <!-- Fixed Navbar - Same as before -->
+    <header class="fixed w-full top-0 z-50 bg-green-700 shadow-lg">
+        <!-- Previous navbar content -->
+        <nav class="content-container">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <div class="bg-white p-2 rounded-lg">
+                        <img src="/static/images/australian-national-university-logo.webp" alt="ANU Logo" class="h-8">
+                    </div>
+                    <span class="ml-3 text-white font-semibold text-lg">Centre for Environmental Markets</span>
+                </div>
+
+                <div class="hidden md:flex items-center space-x-8">
+                    <a href="#home" class="navbar-item text-white hover:text-green-200 transition font-medium">Home</a>
+                    <a href="#about"
+                        class="navbar-item text-white hover:text-green-200 transition font-medium">About</a>
+                    <a href="#structure"
+                        class="navbar-item text-white hover:text-green-200 transition font-medium">Structure</a>
+                    <a href="/data"
+                        class="navbar-item text-white hover:text-green-200 transition font-medium">Data</a>
+                    <button
+                        class="bg-white text-green-700 px-4 py-2 rounded-lg font-medium hover:bg-green-100 transition">
+                        Get Started
+                    </button>
+                </div>
+
+                <div class="md:hidden">
+                    <button class="text-white">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="pt-16">
+        <!-- Adjusted Hero Section -->
+        <section id="home" class="relative hero-section">
+            <div class="content-container">
+                <div class="hero-overlay bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl p-12 text-center">
+                    <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+                        <span class="block">National Ecosystem</span>
+                        <span class="block text-green-600">Change Database</span>
+                    </h1>
+                    <p class="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+                        A comprehensive platform for monitoring and analyzing ecosystem changes across Australia
+                    </p>
+                    <div class="flex justify-center gap-4">
+                        <button
+                        class="bg-green-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-green-700 transition"
+                        hx-get="/map_data"
+                        hx-target="body"
+                        hx-swap="outerHTML"
+                        hx-trigger="click"
+                        hx-push-url="true"
+                    >
+                        Explore Data
+                    </button>
+                        <button
+                            class="border-2 border-green-600 text-green-600 px-8 py-3 rounded-lg font-medium hover:bg-green-50 transition">
+                            Learn More
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Remaining sections with content-container class -->
+        <section id="about" class="diagonal-box -mt-32">
+            <div class="diagonal-content py-20">
+                <div class="content-container">
+                    <!-- About section content -->
+                    <div class="bg-white rounded-xl shadow-xl p-12">
+                        <!-- Previous about content -->
+                        <h2 class="text-4xl font-bold text-center mb-12">About the Platform</h2>
+                        <!-- Rest of the about section content -->
+                    </div>
+
+                    <div class="diagonal-box py-16">
+                        <div class="diagonal-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                            <div class="bg-white rounded-xl shadow-xl p-8">
+                                <div class="text-center">
+                                    <h2 class="text-3xl font-extrabold tracking-tight text-gray-900">National Ecosystem
+                                        Change Database</h2>
+                                    <div class="separator mx-auto w-24 mt-4 mb-6"></div>
+                                    <p class="mt-4 text-lg text-gray-500">
+                                        The National Ecosystem Change Database is managed by the Australian National
+                                        University Centre for Environmental Markets,
+                                        serving as a central hub for environmental data and verification processes.
+                                    </p>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                        <div class="bg-green-50 p-8 rounded-xl card-hover text-center">
+                                            <i class="fas fa-database text-5xl text-green-600 mb-6"></i>
+                                            <h3 class="text-xl font-semibold mb-4">Data Collection</h3>
+                                            <p class="text-gray-600">Comprehensive ecosystem monitoring across Australia
+                                            </p>
+                                        </div>
+
+                                        <div class="bg-green-50 p-8 rounded-xl card-hover text-center">
+                                            <i class="fas fa-chart-line text-5xl text-green-600 mb-6"></i>
+                                            <h3 class="text-xl font-semibold mb-4">Analysis</h3>
+                                            <p class="text-gray-600">Advanced environmental analytics and reporting</p>
+                                        </div>
+
+                                        <div class="bg-green-50 p-8 rounded-xl card-hover text-center">
+                                            <i class="fas fa-certificate text-5xl text-green-600 mb-6"></i>
+                                            <h3 class="text-xl font-semibold mb-4">Verification</h3>
+                                            <p class="text-gray-600">DFREE verification support and validation</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Structure Section -->
+        <section id="structure" class="bg-gray-50 py-20">
+            <div class="content-container">
+                <div class="py-16 bg-gray-50">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="text-center mb-12">
+                            <h2 class="text-3xl font-extrabold tracking-tight text-gray-900">Platform Structure</h2>
+                            <div class="separator mx-auto w-24 mt-4"></div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <!-- Platform Hub -->
+                            <div class="bg-white p-8 rounded-xl shadow-lg card-hover border-t-4 border-green-600">
+                                <div class="flex items-start">
+                                    <div class="bg-green-100 p-4 rounded-lg">
+                                        <i class="fas fa-building text-3xl text-green-600"></i>
+                                    </div>
+                                    <div class="ml-6">
+                                        <h3 class="text-2xl font-bold mb-4">Platform Hub</h3>
+                                        <p class="text-gray-600 leading-relaxed">
+                                            Managed by the Centre for Environmental Markets (ANU), responsible for
+                                            coordination,
+                                            management, and communication between all partners.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Advisory Board -->
+                            <div class="bg-white p-8 rounded-xl shadow-lg card-hover border-t-4 border-green-600">
+                                <div class="flex items-start">
+                                    <div class="bg-green-100 p-4 rounded-lg">
+                                        <i class="fas fa-users text-3xl text-green-600"></i>
+                                    </div>
+                                    <div class="ml-6">
+                                        <h3 class="text-2xl font-bold mb-4">Advisory Board</h3>
+                                        <p class="text-gray-600 leading-relaxed">
+                                            Provides high-level guidance on scope and operations, including
+                                            representatives from NGOs, corporate sector, and technical experts.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Technical Reference -->
+                            <div class="bg-white p-8 rounded-xl shadow-lg card-hover border-t-4 border-green-600">
+                                <div class="flex items-start">
+                                    <div class="bg-green-100 p-4 rounded-lg">
+                                        <i class="fas fa-cogs text-3xl text-green-600"></i>
+                                    </div>
+                                    <div class="ml-6">
+                                        <h3 class="text-2xl font-bold mb-4">Technical Reference Group</h3>
+                                        <p class="text-gray-600 leading-relaxed">
+                                            Expert technical advisors including Industry, State Government, 
+                                            and Federal Government representatives.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Users -->
+                            <div class="bg-white p-8 rounded-xl shadow-lg card-hover border-t-4 border-green-600">
+                                <div class="flex items-start">
+                                    <div class="bg-green-100 p-4 rounded-lg">
+                                        <i class="fas fa-user-friends text-3xl text-green-600"></i>
+                                    </div>
+                                    <div class="ml-6">
+                                        <h3 class="text-2xl font-bold mb-4">User Groups</h3>
+                                        <p class="text-gray-600 leading-relaxed">
+                                            Including landholders, researchers, NGOs, and corporate sector users, with
+                                            direct access to inquiry and feedback channels.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="eco-pattern py-12">
+            <div class="content-container">
+                <div class="py-16">
+                    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                        <div class="bg-white/90 backdrop-blur-sm rounded-xl shadow-xl p-8">
+                            <div class="text-center">
+                                <h2 class="text-3xl font-extrabold text-gray-900">Contact Us</h2>
+                                <div class="separator mx-auto w-24 mt-4 mb-6"></div>
+                                <p class="mt-4 text-lg text-gray-500">
+                                    For inquiries about the National Ecosystem Change Database, please contact the
+                                    Centre for Environmental Markets at ANU.
+                                </p>
+                                <div class="mt-8 flex justify-center">
+                                    <a href="#"
+                                        class="px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700">
+                                        Get in Touch
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-green-800 text-white py-12">
+        <div class="content-container">
+            <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-white">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Quick Links</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="hover:text-green-200">Home</a></li>
+                            <li><a href="#" class="hover:text-green-200">About</a></li>
+                            <li><a href="#" class="hover:text-green-200">Structure</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Resources</h3>
+                        <ul class="space-y-2">
+                            <li><a href="#" class="hover:text-green-200">Documentation</a></li>
+                            <li><a href="#" class="hover:text-green-200">Research</a></li>
+                            <li><a href="#" class="hover:text-green-200">Data Access</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">Contact</h3>
+                        <ul class="space-y-2">
+                            <li>Centre for Environmental Markets</li>
+                            <li>Australian National University</li>
+                            <li>Canberra, ACT</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="mt-8 pt-8 border-t border-green-600">
+                    <p class="text-center text-white">
+                        © 2024 Centre for Environmental Markets - Australian National University
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

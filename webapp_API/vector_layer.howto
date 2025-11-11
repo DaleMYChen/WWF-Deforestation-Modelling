@@ -1,0 +1,2 @@
+tippecanoe -o ~/Downloads/qld_cadastral2.pmtiles --drop-smallest-as-needed --detect-shared-borders --no-clipping ~/Downloads/qld_cadastral.geojson --force
+gsutil -m cp ~/Downloads/qld_cadastral2.pmtiles gs://terrakio-vector/WWF/QLD/qld_cadastral.pmtiles
